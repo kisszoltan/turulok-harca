@@ -88,7 +88,7 @@ export default function AskPage() {
             href="/list"
             variant="light"
           >
-            Már feltett kérdések
+            Már beküldött kérdések
           </Button>
           <Button
             color="primary"
