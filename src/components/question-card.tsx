@@ -3,15 +3,21 @@ import { Card, CardBody, CardFooter } from "@heroui/react";
 import { FC } from "react";
 
 import { DataModel } from "@/convex/_generated/dataModel";
-import { format } from "@/shared/utils";
+import { format, timeAgo } from "@/shared/utils";
 
 export const QuestionCard: FC<{
   question: DataModel["questions"]["document"];
 }> = ({ question: q }) => {
   return (
     <Card>
-      <CardBody className="text-sm text-default-foreground">
-        {q.content}
+      <CardBody className="text-lg text-default-500">
+        <div>
+          {q.content}
+          <span className="text-default-400 text-sm ">
+            {" "}
+            - {timeAgo(q._creationTime)} beküldve
+          </span>
+        </div>
       </CardBody>
       <CardFooter className="flex justify-between items-center text-xs text-default-500">
         <div className="flex gap-4">

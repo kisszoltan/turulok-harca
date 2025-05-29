@@ -25,7 +25,7 @@ export const AllTab = () => {
 
   return (
     <>
-      <div className="mb-4 flex gap-2">
+      <div className="mb-4 flex gap-2 w-full">
         <Input
           className="w-full"
           isClearable={true}
@@ -40,7 +40,7 @@ export const AllTab = () => {
         <Button onPress={() => setSearchQuery(searchInput)}>Keresés</Button>
       </div>
 
-      <div className="flex flex-col gap-4 px-1 mb-6">
+      <div className="flex flex-col gap-4 px-1 mb-6 w-full">
         {questions.length === 0 && (
           <p className="text-default-400 text-sm italic">Nincs találat.</p>
         )}

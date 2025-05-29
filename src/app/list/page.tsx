@@ -23,13 +23,13 @@ export default function ListPage() {
       </h2>
 
       <Tabs aria-label="Rendezés">
-        <Tab key="all" title="Minden">
+        <Tab key="all" className="w-full" title="Minden">
           <AllTab />
         </Tab>
-        <Tab key="hungeros" title="Hungeros">
+        <Tab key="hungeros" className="w-full" title="Hungeros">
           <SideTab side="hungeros" />
         </Tab>
-        <Tab key="westeria" title="Westeria">
+        <Tab key="westeria" className="w-full" title="Westeria">
           <SideTab side="westeria" />
         </Tab>
       </Tabs>

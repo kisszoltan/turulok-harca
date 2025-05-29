@@ -36,7 +36,7 @@ export const timeAgo = (
   includeSeconds = true,
 ): string =>
   formatDistanceToNow(value, {
-    locale: locales[locale ?? "enGB"],
+    locale: locales[locale ?? "hu"],
     addSuffix: true,
     includeSeconds,
   });

@@ -23,7 +23,7 @@ export const list = query({
         q.search("content_norm", normalizeString(searchQuery)),
       );
     } else {
-      q = _query;
+      q = _query.order("desc");
     }
 
     const results = await q.paginate(paginationOpts);
