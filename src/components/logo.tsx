@@ -3,7 +3,7 @@
 import { Image } from "@heroui/react";
 import { FC } from "react";
 
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/shared/site";
 
 export const Logo: FC<{ size?: number }> = ({ size = 24 }) => {
   return (

@@ -5,6 +5,7 @@ type NavItemType = { href: string; label: string; isPrimary?: boolean };
 export const siteConfig = {
   name: "Turulok Harca",
   description: "Két világ. Egy kérdés.",
+  company: "Kiss-Hanzsa Kft",
   navItems: [
     { href: "/", label: "Bevezető" },
     { href: "/ask", label: "Kérdezek" },

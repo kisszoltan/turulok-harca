@@ -17,7 +17,7 @@ import { Icon } from "@iconify/react";
 
 import { Profile } from "./profile";
 
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/shared/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 
 export const Navbar = () => {

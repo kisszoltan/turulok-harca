@@ -5,7 +5,7 @@ import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 
 import { Providers } from "./providers";
 
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/shared/site";
 import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
