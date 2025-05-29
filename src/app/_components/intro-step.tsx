@@ -2,6 +2,7 @@ import { Button } from "@heroui/button";
 import { motion } from "framer-motion";
 import { FC, Dispatch, SetStateAction } from "react";
 import { cn } from "@heroui/theme";
+import { Link } from "@heroui/link";
 
 import { StepType } from "@/types";
 import { message, title } from "@/components/primitives";
@@ -35,11 +36,12 @@ export const IntroStep: FC<{
           Kezdjük
         </Button>
         <Button
+          as={Link}
           className="text-lg"
           color="secondary"
+          href="/list"
           size="lg"
           variant="light"
-          onPress={() => setStep("list")}
         >
           Lássuk mások hangját
         </Button>

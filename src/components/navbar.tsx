@@ -15,6 +15,8 @@ import clsx from "clsx";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 
+import { Profile } from "./profile";
+
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 
@@ -59,6 +61,7 @@ export const Navbar = () => {
             <Icon className="text-default-500" icon="simple-icons:github" />
           </Link>
           <ThemeSwitch />
+          <Profile />
         </NavbarItem>
       </NavbarContent>
 
@@ -67,6 +70,7 @@ export const Navbar = () => {
           <Icon className="text-default-500" icon="simple-icons:github" />
         </Link>
         <ThemeSwitch />
+        <Profile />
         <NavbarMenuToggle />
       </NavbarContent>
 

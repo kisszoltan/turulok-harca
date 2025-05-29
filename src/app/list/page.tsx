@@ -79,7 +79,7 @@ export default function ListPage() {
     <motion.div
       key="list"
       animate={{ opacity: 1, scale: 1 }}
-      className="text-center max-w-2xl p-4"
+      className="text-center max-w-2xl mx-auto p-4"
       exit={{ opacity: 0, scale: 1.05 }}
       initial={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.5 }}

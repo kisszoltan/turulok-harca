@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { Link } from "@heroui/link";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 
 import { Providers } from "./providers";
 
@@ -31,29 +32,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
-      <head />
-      <body className="min-h-screen font-serif antialiased">
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
-            <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://heroui.com?utm_source=next-app-template"
-                title="heroui.com homepage"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">HeroUI</p>
-              </Link>
-            </footer>
-          </div>
-        </Providers>
-      </body>
-    </html>
+    <ConvexAuthNextjsServerProvider>
+      <html suppressHydrationWarning lang="en">
+        <head />
+        <body className="min-h-screen font-serif antialiased">
+          <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+            <div className="relative flex flex-col h-screen">
+              <Navbar />
+              <main className="mx-auto max-w-7xl pt-16 px-6 flex-grow w-full">
+                {children}
+              </main>
+              <footer className="w-full flex items-center justify-center py-3">
+                <Link
+                  isExternal
+                  className="flex items-center gap-1 text-current"
+                  href="https://heroui.com?utm_source=next-app-template"
+                  title="heroui.com homepage"
+                >
+                  <span className="text-default-600">Powered by</span>
+                  <p className="text-primary">HeroUI</p>
+                </Link>
+              </footer>
+            </div>
+          </Providers>
+        </body>
+      </html>
+    </ConvexAuthNextjsServerProvider>
   );
 }
