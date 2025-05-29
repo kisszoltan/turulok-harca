@@ -3,13 +3,12 @@ import { motion } from "framer-motion";
 import { FC, Dispatch, SetStateAction } from "react";
 import { cn } from "@heroui/theme";
 
-import { SideType, StepType } from "@/types";
+import { StepType } from "@/types";
 import { message, title } from "@/components/primitives";
 
 export const SideStep: FC<{
   setStep: Dispatch<SetStateAction<StepType>>;
-  setSide: Dispatch<SetStateAction<SideType>>;
-}> = ({ setStep, setSide }) => {
+}> = ({ setStep }) => {
   return (
     <motion.div
       key="side"
@@ -29,7 +28,7 @@ export const SideStep: FC<{
           className="py-6 text-2xl bg-orange-500 text-white h-20 flex flex-col gap-1"
           size="lg"
           onPress={() => {
-            setSide("hungeros");
+            //setSide("hungeros");
             setStep("action");
           }}
         >
@@ -40,7 +39,7 @@ export const SideStep: FC<{
           className="py-6 text-2xl bg-green-500 text-white h-20 flex flex-col gap-1"
           size="lg"
           onPress={() => {
-            setSide("westeria");
+            //setSide("westeria");
             setStep("action");
           }}
         >

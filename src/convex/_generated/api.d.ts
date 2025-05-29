@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as _helpers from "../_helpers.js";
 import type * as _shared from "../_shared.js";
 import type * as _types from "../_types.js";
 import type * as auth from "../auth.js";
@@ -30,6 +31,7 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  _helpers: typeof _helpers;
   _shared: typeof _shared;
   _types: typeof _types;
   auth: typeof auth;

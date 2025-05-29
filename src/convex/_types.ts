@@ -1,17 +1,9 @@
-export type PhaseType = "upload" | "voting" | "complete";
+import { v } from "convex/values";
 
-export const challengeTypeValues = [
-  "spark",
-  "boost",
-  "pro",
-  "invalid",
-] as const;
-export type ChallengeTypeType = (typeof challengeTypeValues)[number];
+export const sideTypeValue = ["hungeros", "westeria"] as const;
 
-export const submissionStatusValues = [
-  "in progress",
-  "error",
-  "ready",
-] as const;
+export type SideType = (typeof sideTypeValue)[number];
 
-export type SubmissionStatusType = (typeof submissionStatusValues)[number];
+export const sideTypeSchema = v.union(
+  ...sideTypeValue.map((sideType) => v.literal(sideType)),
+);

@@ -9,16 +9,6 @@ import {
 import { hu } from "date-fns/locale";
 const locales: { [key: string]: Locale } = { hu };
 
-export function normalizeString(input?: string) {
-  return (
-    input &&
-    input
-      .normalize("NFD")
-      .replace(/\p{Diacritic}/gu, "") // remove accents
-      .toLowerCase()
-  );
-}
-
 export const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
