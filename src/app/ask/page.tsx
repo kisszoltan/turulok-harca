@@ -6,21 +6,51 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link } from "@heroui/link";
 import { cn } from "@heroui/theme";
+import { useMutation, useQuery } from "convex/react";
+import { addToast } from "@heroui/react";
+import { ConvexError } from "convex/values";
+import { useRouter } from "next/navigation";
 
 import { message, title } from "@/components/primitives";
 import { HintBox } from "@/components/hint-box";
-
-const maxLength = 200;
+import { api } from "@/convex/_generated/api";
+import { Loading } from "@/components/loading";
 
 export default function AskPage() {
+  const router = useRouter();
+  const [sending, setSending] = useState(false);
   const [question, setQuestion] = useState("");
+  const { MAX_QUESTION_LENGTH } = useQuery(api.core.config) ?? {};
+  const submitQuestion = useMutation(api.questions.create);
 
   const handleSubmit = () => {
     if (question.trim().length > 0) {
+      setSending(true);
+      submitQuestion({ content: question })
+        .then(() => {
+          addToast({
+            title: "A holló megérkezett",
+            description: "Kérdés sikeresen beküldve",
+            color: "success",
+          });
+          router.push("/list");
+        })
+        .catch((e: ConvexError<string>) =>
+          addToast({
+            title: "A holló elakadt",
+            description:
+              "Nem sikerült a kérdés beküldése a következő indokkal: " +
+              e.message,
+            color: "danger",
+          }),
+        )
+        .finally(() => setSending(false));
     }
   };
 
-  return (
+  return MAX_QUESTION_LENGTH === undefined ? (
+    <Loading />
+  ) : (
     <motion.div
       key="ask"
       animate={{ opacity: 1, scale: 1 }}
@@ -39,7 +69,7 @@ export default function AskPage() {
       <div className="mt-6">
         <Textarea
           className="w-full max-w-md mx-auto"
-          description={`${question?.trim().length ?? 0}/${maxLength}`}
+          description={`${question?.trim().length ?? 0}/${MAX_QUESTION_LENGTH}`}
           minRows={5}
           placeholder="Írd ide a kérdésed..."
           rows={5}
@@ -63,7 +93,9 @@ export default function AskPage() {
           <Button
             color="primary"
             isDisabled={
-              question.trim().length === 0 || question.trim().length > maxLength
+              sending ||
+              question.trim().length === 0 ||
+              question.trim().length > MAX_QUESTION_LENGTH
             }
             variant="solid"
             onPress={handleSubmit}

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ConvexAuthNextjsProvider } from "@convex-dev/auth/nextjs";
 import { ConvexReactClient } from "convex/react";
+import { ToastProvider } from "@heroui/toast";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <ConvexAuthNextjsProvider client={convex}>
       <HeroUIProvider navigate={router.push}>
+        <ToastProvider />
         <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
       </HeroUIProvider>
     </ConvexAuthNextjsProvider>

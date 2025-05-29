@@ -1,9 +1,10 @@
 "use client";
 
-import { Spinner } from "@heroui/react";
 import { useConvexAuth } from "convex/react";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect } from "react";
+
+import { Loading } from "@/components/loading";
 
 export default function UserLayout({
   children,
@@ -25,11 +26,3 @@ export default function UserLayout({
     </Suspense>
   );
 }
-
-const Loading = () => {
-  return (
-    <div className="h-full flex items-center justify-center">
-      <Spinner size="lg" />
-    </div>
-  );
-};
