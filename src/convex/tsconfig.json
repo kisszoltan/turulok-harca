@@ -20,6 +20,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./**/*"],
+  "include": ["./**/*", "../components/side-button.tsx"],
   "exclude": ["./_generated"]
 }

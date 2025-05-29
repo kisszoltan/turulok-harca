@@ -10,10 +10,11 @@ import {
   Tooltip,
 } from "@heroui/react";
 import { FC } from "react";
-import { Authenticated, Unauthenticated } from "convex/react";
+import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 
 import { DataModel } from "@/convex/_generated/dataModel";
-import { format, timeAgo } from "@/shared/utils";
+import { capitalize, format, timeAgo } from "@/shared/utils";
+import { api } from "@/convex/_generated/api";
 
 export const QuestionCard: FC<{
   question: DataModel["questions"]["document"];
@@ -48,6 +49,8 @@ export const QuestionCard: FC<{
 };
 
 const VoteButton = () => {
+  const currentBalance = useQuery(api.balances.get);
+
   return (
     <>
       <Authenticated>
@@ -57,37 +60,57 @@ const VoteButton = () => {
           </PopoverTrigger>
           <PopoverContent>
             <div className="flex flex-col px-1 py-2 font-sans text-default-500">
-              <div className="font-bold">
-                XY Kistanácsi Befolyás felhasználása
-              </div>
-              <ul className="ml-4 mb-2">
-                <li className="text-small list list-disc">
-                  Legközelebb 24 óra múlva szavazhatsz
-                </li>
-                <li className="text-small list list-disc">
-                  [side] kap +1 szavazatot erre a kérdésre
-                </li>
-                <li className="text-small list list-disc">
-                  +XY támogatói pontot kap [side]
-                </li>
-                <li className="text-small list list-disc">
-                  Megmarad az összes Kistanácsi Befolyásod
-                </li>
-              </ul>
-              <div className="flex flex-row gap-2 w-full justify-center">
-                <Button
-                  as={Link}
-                  className="mx-auto"
-                  color="secondary"
-                  href="/buy"
-                  variant="light"
-                >
-                  Befolyást Vásárolok!
-                </Button>
-                <Button className="mx-auto" color="primary">
-                  Szavazok!
-                </Button>
-              </div>
+              {currentBalance ? (
+                <>
+                  <div className="font-bold">
+                    {currentBalance.value} Kistanácsi Befolyás felhasználása
+                  </div>
+                  <ul className="ml-4 mb-2">
+                    <li className="text-small list list-disc">
+                      24 óra múlva újra szavazhatsz
+                    </li>
+                    <li className="text-small list list-disc">
+                      {capitalize(currentBalance.side)} kap +1 szavazatot erre a
+                      kérdésre
+                    </li>
+                    <li className="text-small list list-disc">
+                      +{currentBalance.value} támogatói pontot kap{" "}
+                      {capitalize(currentBalance.side)}
+                    </li>
+                    <li className="text-small list list-disc">
+                      Megmarad az összes Kistanácsi Befolyásod
+                    </li>
+                  </ul>
+                  <div className="flex flex-row gap-2 w-full justify-center">
+                    <Button
+                      as={Link}
+                      className="mx-auto"
+                      color="secondary"
+                      href="/buy"
+                      variant="light"
+                    >
+                      Befolyást Vásárolok!
+                    </Button>
+                    <Button className="mx-auto" color="primary">
+                      Szavazok!
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="font-bold mb-4">
+                    Nincs Kistanácsi Befolyásod
+                  </div>
+                  <Button
+                    as={Link}
+                    className="mx-auto"
+                    color="primary"
+                    href="/buy"
+                  >
+                    Vásárolok Befolyást!
+                  </Button>
+                </>
+              )}
             </div>
           </PopoverContent>
         </Popover>

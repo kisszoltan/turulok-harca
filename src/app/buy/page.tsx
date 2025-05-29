@@ -4,23 +4,39 @@ import { Button } from "@heroui/button";
 import { motion } from "framer-motion";
 import { Link } from "@heroui/link";
 import { cn } from "@heroui/theme";
-import { ComponentProps, FC, useState } from "react";
-import { NumberInput } from "@heroui/react";
-import { Authenticated, Unauthenticated } from "convex/react";
+import { useEffect, useState } from "react";
+import { addToast, Alert, NumberInput } from "@heroui/react";
+import {
+  Authenticated,
+  Unauthenticated,
+  useMutation,
+  useQuery,
+} from "convex/react";
+import { ConvexError } from "convex/values";
+import { useRouter } from "next/navigation";
 
 import { message, title } from "@/components/primitives";
 import { SideType } from "@/convex/_types";
 import { capitalize } from "@/shared/utils";
+import { SideButton } from "@/components/side-button";
+import { api } from "@/convex/_generated/api";
 
 export default function BuyPage() {
-  const [side, setSide] = useState<SideType | undefined>();
+  const router = useRouter();
+  const increaseBalance = useMutation(api.balances.increase);
+  const currentBalance = useQuery(api.balances.get);
+  const [side, setSide] = useState<SideType | undefined>(currentBalance?.side);
   const [amount, setAmount] = useState(1);
+
+  useEffect(() => {
+    setSide(currentBalance?.side);
+  }, [currentBalance]);
 
   return (
     <motion.div
       key="ask"
       animate={{ opacity: 1, scale: 1 }}
-      className="text-center max-w-2xl mx-auto p-4"
+      className="max-w-2xl mx-auto p-4"
       exit={{ opacity: 0, scale: 1.05 }}
       initial={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.5 }}
@@ -57,35 +73,50 @@ export default function BuyPage() {
         </Button>
       </Unauthenticated>
       <Authenticated>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <SideButton
-            currentSide={side}
-            side="hungeros"
-            slogan="a régi rend védelmezője"
-            onPress={() => {
-              setSide("hungeros");
-            }}
-          />
-          <SideButton
-            currentSide={side}
-            side="westeria"
-            slogan="az új korszak hírnöke"
-            onPress={() => {
-              setSide("westeria");
-            }}
-          />
+        <div className="flex flex-col md:flex-row gap-6 mt-6 justify-center">
+          {(!currentBalance?.side || currentBalance.side === "hungeros") && (
+            <SideButton
+              currentSide={side}
+              side="hungeros"
+              slogan="a régi rend védelmezője"
+              onPress={() => {
+                setSide("hungeros");
+              }}
+            />
+          )}
+          {(!currentBalance?.side || currentBalance.side === "westeria") && (
+            <SideButton
+              currentSide={side}
+              side="westeria"
+              slogan="az új korszak hírnöke"
+              onPress={() => {
+                setSide("westeria");
+              }}
+            />
+          )}
         </div>
         <NumberInput
-          className="mt-6"
+          className="my-6"
           description={
             side &&
-            `Jelenleg nincs Kistanácsi Befolyásod. Vásárlásoddal ${amount} befolyásod lesz a ${capitalize(side)} Kistanácsában.`
+            `Jelenleg ${currentBalance?.value ? `${currentBalance?.value} Kistanácsi Befolyásod van` : "nincs Kistanácsi Befolyásod"}. Vásárlásoddal ${(currentBalance?.value ?? 0) + amount} befolyásod lesz a ${capitalize(side)} Kistanácsában.`
           }
           label="Vásárolni kívánt mennyiség"
           minValue={1}
           size="lg"
           value={amount}
           onValueChange={setAmount}
+        />
+
+        <Alert
+          color="warning"
+          description={
+            <div>
+              Ha már egyszer vásároltál befolyást valamelyik oldalhoz, onnantól
+              csakis ahhoz az oldalhoz vásárolhatsz majd további befolyást.
+            </div>
+          }
+          title="Vigyázz!"
         />
 
         <div className="mt-8 flex flex-col items-center gap-6">
@@ -98,7 +129,31 @@ export default function BuyPage() {
             >
               Már beküldött kérdések
             </Button>
-            <Button color="primary" size="lg" variant="solid">
+            <Button
+              color="primary"
+              isDisabled={!side}
+              size="lg"
+              variant="solid"
+              onPress={() => {
+                side &&
+                  increaseBalance({ side, amount })
+                    .then(() => {
+                      addToast({
+                        title: "Holló érkezett",
+                        description: "Sikeres vásárlás",
+                        color: "success",
+                      });
+                      router.push("/list");
+                    })
+                    .catch((e: ConvexError<string>) =>
+                      addToast({
+                        color: "danger",
+                        title: "Holló érkezett",
+                        description: "Sikertelen vásárlás: " + e.data,
+                      }),
+                    );
+              }}
+            >
               Vásárlás
             </Button>
           </div>
@@ -107,34 +162,3 @@ export default function BuyPage() {
     </motion.div>
   );
 }
-
-const SideButton: FC<
-  ComponentProps<typeof Button> & {
-    side: SideType;
-    slogan: string;
-    currentSide?: SideType;
-  }
-> = ({ side, slogan, currentSide, className, ...props }) => {
-  const disabled = currentSide !== side;
-  const color = disabled
-    ? "text-default-400 dark:text-default-200"
-    : side === "westeria"
-      ? "text-white bg-green-500"
-      : "text-white bg-orange-500";
-
-  return (
-    <Button
-      className={cn(
-        "relative py-6 text-2xl  h-20 flex flex-col gap-1",
-        color,
-        className,
-      )}
-      size="lg"
-      variant="flat"
-      {...props}
-    >
-      <span className="tracking-widest">{capitalize(side)}</span>
-      <span className="text-sm">{slogan}</span>
-    </Button>
-  );
-};

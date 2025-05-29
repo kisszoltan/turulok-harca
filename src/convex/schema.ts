@@ -2,6 +2,8 @@ import { defineSchema, defineTable } from "convex/server";
 import { authTables } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
+import { sideTypeSchema } from "./_types";
+
 const questions = defineTable({
   content: v.string(),
   content_norm: v.string(),
@@ -15,9 +17,34 @@ const questions = defineTable({
     searchField: "content_norm",
   });
 
+const balances = defineTable({
+  userId: v.id("users"),
+  value: v.number(),
+  side: sideTypeSchema,
+});
+
+const purchases = defineTable({
+  userId: v.id("users"),
+  amount: v.number(),
+});
+
+const votes = defineTable({
+  userId: v.id("users"),
+  questionId: v.id("questions"),
+});
+
+const sides = defineTable({
+  side: sideTypeSchema,
+  votes: v.number(),
+});
+
 const schema = defineSchema({
   ...authTables,
   questions,
+  balances,
+  purchases,
+  votes,
+  sides,
 });
 
 export default schema;

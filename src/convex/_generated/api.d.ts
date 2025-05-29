@@ -17,6 +17,7 @@ import type * as _helpers from "../_helpers.js";
 import type * as _shared from "../_shared.js";
 import type * as _types from "../_types.js";
 import type * as auth from "../auth.js";
+import type * as balances from "../balances.js";
 import type * as core from "../core.js";
 import type * as http from "../http.js";
 import type * as questions from "../questions.js";
@@ -35,6 +36,7 @@ declare const fullApi: ApiFromModules<{
   _shared: typeof _shared;
   _types: typeof _types;
   auth: typeof auth;
+  balances: typeof balances;
   core: typeof core;
   http: typeof http;
   questions: typeof questions;
