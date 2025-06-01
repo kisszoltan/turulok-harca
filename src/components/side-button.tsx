@@ -6,25 +6,26 @@ import { ComponentProps, FC } from "react";
 
 import { SideType } from "@/convex/_types";
 import { capitalize } from "@/shared/utils";
+import { sides } from "@/types";
 
 export const SideButton: FC<
   ComponentProps<typeof Button> & {
     side: SideType;
-    slogan: string;
     currentSide?: SideType;
   }
-> = ({ side, slogan, currentSide, className, ...props }) => {
+> = ({ side, currentSide, className, ...props }) => {
   const disabled = currentSide !== side;
-  const color = disabled
-    ? "text-default-400 dark:text-default-200"
-    : side === "westeria"
-      ? "text-white bg-green-500"
-      : "text-white bg-orange-500";
+  const color =
+    currentSide && disabled
+      ? "text-default-400 dark:text-default-200"
+      : side === "westeria"
+        ? "text-white bg-green-500"
+        : "text-white bg-orange-500";
 
   return (
     <Button
       className={cn(
-        "w-full md:w-1/2 relative py-6 text-2xl h-20 flex flex-col gap-1",
+        "w-full md:w-1/2 relative py-6 text-2xl h-auto flex flex-col gap-1",
         color,
         className,
       )}
@@ -33,7 +34,7 @@ export const SideButton: FC<
       {...props}
     >
       <span className="tracking-widest">{capitalize(side)}</span>
-      <span className="text-sm">{slogan}</span>
+      <span className="text-left text-sm text-wrap">{sides[side].slogan}</span>
     </Button>
   );
 };

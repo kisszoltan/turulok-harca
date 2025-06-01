@@ -74,26 +74,26 @@ export default function BuyPage() {
       </Unauthenticated>
       <Authenticated>
         <div className="flex flex-col md:flex-row gap-6 mt-6 justify-center">
-          {(!currentBalance?.side || currentBalance.side === "hungeros") && (
-            <SideButton
-              currentSide={side}
-              side="hungeros"
-              slogan="a régi rend védelmezője"
-              onPress={() => {
-                setSide("hungeros");
-              }}
-            />
-          )}
-          {(!currentBalance?.side || currentBalance.side === "westeria") && (
-            <SideButton
-              currentSide={side}
-              side="westeria"
-              slogan="az új korszak hírnöke"
-              onPress={() => {
-                setSide("westeria");
-              }}
-            />
-          )}
+          <SideButton
+            currentSide={side}
+            isDisabled={
+              currentBalance?.side && currentBalance.side === "westeria"
+            }
+            side="hungeros"
+            onPress={() => {
+              setSide("hungeros");
+            }}
+          />
+          <SideButton
+            currentSide={side}
+            isDisabled={
+              currentBalance?.side && currentBalance.side === "hungeros"
+            }
+            side="westeria"
+            onPress={() => {
+              setSide("westeria");
+            }}
+          />
         </div>
         <NumberInput
           className="my-6"
