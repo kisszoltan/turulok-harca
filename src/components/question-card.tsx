@@ -1,5 +1,6 @@
 import { Button } from "@heroui/button";
 import {
+  addToast,
   Card,
   CardBody,
   CardFooter,
@@ -10,9 +11,15 @@ import {
   Tooltip,
 } from "@heroui/react";
 import { FC } from "react";
-import { Authenticated, Unauthenticated, useQuery } from "convex/react";
+import {
+  Authenticated,
+  Unauthenticated,
+  useMutation,
+  useQuery,
+} from "convex/react";
+import { ConvexError } from "convex/values";
 
-import { DataModel } from "@/convex/_generated/dataModel";
+import { DataModel, Id } from "@/convex/_generated/dataModel";
 import { capitalize, format, timeAgo } from "@/shared/utils";
 import { api } from "@/convex/_generated/api";
 
@@ -42,13 +49,14 @@ export const QuestionCard: FC<{
             Westeria: {format(q.votesWesteria)}
           </span>
         </div>
-        <VoteButton />
+        <VoteButton questionId={q._id} />
       </CardFooter>
     </Card>
   );
 };
 
-const VoteButton = () => {
+const VoteButton: FC<{ questionId: Id<"questions"> }> = ({ questionId }) => {
+  const submitVote = useMutation(api.balances.vote);
   const currentBalance = useQuery(api.balances.get);
 
   return (
@@ -75,7 +83,7 @@ const VoteButton = () => {
                     </li>
                     <li className="text-small list list-disc">
                       +{currentBalance.value} támogatói pontot kap{" "}
-                      {capitalize(currentBalance.side)}
+                      <b>{capitalize(currentBalance.side)}</b>
                     </li>
                     <li className="text-small list list-disc">
                       Megmarad az összes Kistanácsi Befolyásod
@@ -91,7 +99,27 @@ const VoteButton = () => {
                     >
                       Befolyást Vásárolok!
                     </Button>
-                    <Button className="mx-auto" color="primary">
+                    <Button
+                      className="mx-auto"
+                      color="primary"
+                      onPress={() => {
+                        submitVote({ question: questionId })
+                          .then(() => {
+                            addToast({
+                              title: "Holló érkezett",
+                              description: "Szavazatod megkaptuk",
+                              color: "success",
+                            });
+                          })
+                          .catch((e: ConvexError<string>) =>
+                            addToast({
+                              title: "Holló érkezett",
+                              description: e.data,
+                              color: "danger",
+                            }),
+                          );
+                      }}
+                    >
                       Szavazok!
                     </Button>
                   </div>

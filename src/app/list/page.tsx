@@ -2,13 +2,18 @@
 
 import { motion } from "framer-motion";
 import { Tab, Tabs } from "@heroui/react";
+import { useQuery } from "convex/react";
 
 import { AllTab } from "./_components/all-tab";
 import { SideTab } from "./_components/side-tab";
 
 import { title } from "@/components/primitives";
+import { api } from "@/convex/_generated/api";
+import { format } from "@/shared/utils";
 
 export default function ListPage() {
+  const sideVotes = useQuery(api.balances.getVotes);
+
   return (
     <motion.div
       key="list"
@@ -26,10 +31,18 @@ export default function ListPage() {
         <Tab key="all" className="w-full" title="Minden">
           <AllTab />
         </Tab>
-        <Tab key="hungeros" className="w-full" title="Hungeros">
+        <Tab
+          key="hungeros"
+          className="w-full"
+          title={`Hungeros (${sideVotes && format(sideVotes["hungeros"])})`}
+        >
           <SideTab side="hungeros" />
         </Tab>
-        <Tab key="westeria" className="w-full" title="Westeria">
+        <Tab
+          key="westeria"
+          className="w-full"
+          title={`Westeria (${sideVotes && format(sideVotes["westeria"])})`}
+        >
           <SideTab side="westeria" />
         </Tab>
       </Tabs>
