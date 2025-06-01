@@ -3,6 +3,7 @@
 import { Button } from "@heroui/button";
 import { cn } from "@heroui/theme";
 import { ComponentProps, FC } from "react";
+import { Image } from "@heroui/react";
 
 import { SideType } from "@/convex/_types";
 import { capitalize } from "@/shared/utils";
@@ -33,6 +34,7 @@ export const SideButton: FC<
       variant="flat"
       {...props}
     >
+      <Image src={sides[side].portrait} />
       <span className="tracking-widest">{capitalize(side)}</span>
       <span className="text-left text-sm text-wrap">{sides[side].slogan}</span>
     </Button>
