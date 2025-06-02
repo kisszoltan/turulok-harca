@@ -1,5 +1,6 @@
 import { OrderedQuery, paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
+import { addDays } from "date-fns";
 
 import { mutation, query } from "./_generated/server";
 import { expectUser } from "./_shared";
@@ -69,6 +70,18 @@ export const create = mutation({
 
     if (!content || content.length > 200)
       throw new ConvexError("A kérdés hossza nem megfelelő");
+
+    const lastQuestion = await ctx.db
+      .query("questions")
+      .filter((q) => q.eq(q.field("owner"), userId))
+      .order("desc")
+      .first();
+
+    if (lastQuestion && addDays(lastQuestion._creationTime, 7) > new Date()) {
+      throw new ConvexError(
+        "Legyen akármekkora befolyásod, a nép hangjának is vannak korlátai. Hetente csak egy kérdést küldhetsz be.",
+      );
+    }
 
     // TODO verify if similar question exists already
     // TODO moderate content with AI

@@ -139,7 +139,7 @@ export default function BuyPage() {
                   increaseBalance({ side, amount })
                     .then(() => {
                       addToast({
-                        title: "Holló érkezett",
+                        title: "A hollód megérkezett",
                         description: "Sikeres vásárlás",
                         color: "success",
                       });
@@ -148,7 +148,7 @@ export default function BuyPage() {
                     .catch((e: ConvexError<string>) =>
                       addToast({
                         color: "danger",
-                        title: "Holló érkezett",
+                        title: "A hollód visszafordult",
                         description: "Sikertelen vásárlás: " + e.data,
                       }),
                     );

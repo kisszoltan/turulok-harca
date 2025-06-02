@@ -29,7 +29,7 @@ export default function AskPage() {
       submitQuestion({ content: question })
         .then(() => {
           addToast({
-            title: "A holló megérkezett",
+            title: "A hollód megérkezett",
             description: "Kérdés sikeresen beküldve",
             color: "success",
           });
@@ -37,10 +37,8 @@ export default function AskPage() {
         })
         .catch((e: ConvexError<string>) =>
           addToast({
-            title: "A holló elakadt",
-            description:
-              "Nem sikerült a kérdés beküldése a következő indokkal: " +
-              e.message,
+            title: "A hollód visszafordult",
+            description: e.data,
             color: "danger",
           }),
         )
