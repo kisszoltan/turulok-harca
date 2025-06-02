@@ -50,7 +50,9 @@ const votes = defineTable({
 
 const sides = defineTable({
   side: sideTypeSchema,
-  votes: v.number(),
+  balance: v.number(), // available tickets
+  votes: v.number(), // tickets used for voting
+  members: v.number(),
 });
 
 const schema = defineSchema({

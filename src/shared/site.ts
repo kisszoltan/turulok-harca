@@ -12,12 +12,14 @@ export const siteConfig = {
     { href: "/ask", label: "Kérdezek" },
     { href: "/list", label: "Összes kérdés" },
     { href: "/buy", label: "Kistanácsi Befolyás" },
+    { href: "/status", label: "Jelenlegi állás" },
   ] as NavItemType[],
   navMenuItems: [
     { href: "/", label: "Bevezető" },
     { href: "/ask", label: "Kérdezek" },
     { href: "/list", label: "Összes kérdés" },
     { href: "/buy", label: "Kistanácsi Befolyás" },
+    { href: "/status", label: "Jelenlegi állás" },
   ] as NavItemType[],
   links: {
     github: "https://github.com/kisszoltan/turulok-harca",
