@@ -10,6 +10,7 @@ import { SideTab } from "./_components/side-tab";
 import { title } from "@/components/primitives";
 import { api } from "@/convex/_generated/api";
 import { format } from "@/shared/utils";
+import { VotingCounter } from "@/components/voting-counter";
 
 export default function ListPage() {
   const sideVotes = useQuery(api.balances.getVotes);
@@ -26,6 +27,7 @@ export default function ListPage() {
       <h2 className={title({ size: "sm" })}>
         Melyik kérdés szerinted a legizgalmasabb?
       </h2>
+      <VotingCounter />
 
       <Tabs aria-label="Rendezés">
         <Tab key="all" className="w-full" title="Minden">

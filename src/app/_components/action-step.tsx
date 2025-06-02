@@ -19,9 +19,14 @@ export const ActionStep: FC<{
       initial={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className={title({ size: "sm" })}>Mi lesz a választás után?</h2>
+      <h2 className={title({ size: "sm" })}>Mi lesz a koronázás után?</h2>
       <p className={cn(message({ isJustified: false }), "my-8")}>
-        Te mit kérdeznél az uralkodótól a megválasztása utáni első percben?
+        Hungaria hamarosan újra egyesül amikor a két tartomány együttesen
+        nyílványítja ki akaratát, hogy melyik vezető legyen az ország
+        uralkodója.
+      </p>
+      <p className={cn(message({ isJustified: false }), "my-8")}>
+        Te mit kérdeznél az uralkodótól a koronázása utáni első percben?
       </p>
       <div className="flex flex-row gap-6 mt-8 mb-4 justify-center">
         <Button

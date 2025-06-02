@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { addDays } from "date-fns";
 
 import { query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
@@ -44,7 +45,22 @@ export const counters = query({
 
     return {
       lastVote: lastVote?._creationTime,
+      nextVote: lastVote?._creationTime
+        ? Math.max(Date.now(), addDays(lastVote?._creationTime, 1).getTime())
+        : Date.now(),
+      canVote:
+        !lastVote?._creationTime ||
+        Date.now() > addDays(lastVote._creationTime, 1).getTime(),
       lastQuestion: lastQuestion?._creationTime,
+      nextQuestion: lastQuestion?._creationTime
+        ? Math.max(
+            Date.now(),
+            addDays(lastQuestion?._creationTime, 7).getTime(),
+          )
+        : Date.now(),
+      canAsk:
+        !lastQuestion?._creationTime ||
+        Date.now() > addDays(lastQuestion._creationTime, 1).getTime(),
     };
   },
 });

@@ -15,6 +15,7 @@ import { message, title } from "@/components/primitives";
 import { HintBox } from "@/components/hint-box";
 import { api } from "@/convex/_generated/api";
 import { Loading } from "@/components/loading";
+import { AskingCounter } from "@/components/asking-counter";
 
 export default function AskPage() {
   const router = useRouter();
@@ -64,6 +65,7 @@ export default function AskPage() {
         tartalmában egy ilyen beszélgetéshez. Kerüld a személyes utalásokat,
         hiszen az uralkodó személye, akit kérdezel még ismeretlen.
       </p>
+      <AskingCounter />
       <div className="mt-6">
         <Textarea
           className="w-full max-w-md mx-auto"
