@@ -1,6 +1,7 @@
 import numbro from "numbro";
 import {
   DateArg,
+  Duration,
   formatDistanceToNow,
   formatDuration,
   intervalToDuration,
@@ -43,6 +44,13 @@ export const timeAgo = (
 
 export const timeRemaining = (
   to: Date,
+  format: (keyof Duration)[] = [
+    "months",
+    "days",
+    "hours",
+    "minutes",
+    "seconds",
+  ],
   locale: string = "hu",
 ): { value: string; text: string } => {
   const from = new Date();
@@ -56,18 +64,26 @@ export const timeRemaining = (
   const formatted = formatDuration(duration, {
     locale: locales[locale] ?? hu,
     zero: true,
-    format: ["days", "hours", "minutes", "seconds"],
+    format,
   });
 
   return {
     value:
-      formatTwoDigits(forcedNum(duration.days)) +
-      ":" +
-      formatTwoDigits(forcedNum(duration.hours)) +
-      ":" +
-      formatTwoDigits(forcedNum(duration.minutes)) +
-      ":" +
-      formatTwoDigits(forcedNum(duration.seconds)),
+      (format.includes("months")
+        ? formatTwoDigits(forcedNum(duration.months)) + ":"
+        : "") +
+      (format.includes("days")
+        ? formatTwoDigits(forcedNum(duration.days)) + ":"
+        : "") +
+      (format.includes("hours")
+        ? formatTwoDigits(forcedNum(duration.hours)) + ":"
+        : "") +
+      (format.includes("minutes")
+        ? formatTwoDigits(forcedNum(duration.minutes)) + ":"
+        : "") +
+      (format.includes("seconds")
+        ? formatTwoDigits(forcedNum(duration.seconds))
+        : ""),
     text: formatted || "0s",
   };
 };

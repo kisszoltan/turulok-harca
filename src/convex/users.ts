@@ -24,3 +24,27 @@ export const get = query({
     });
   },
 });
+
+export const counters = query({
+  handler: async (ctx) => {
+    const userId = await assumeUser(ctx);
+
+    if (!userId) return null;
+
+    const lastVote = await ctx.db
+      .query("votes")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .order("desc")
+      .first();
+    const lastQuestion = await ctx.db
+      .query("questions")
+      .filter((q) => q.eq(q.field("owner"), userId))
+      .order("desc")
+      .first();
+
+    return {
+      lastVote: lastVote?._creationTime,
+      lastQuestion: lastQuestion?._creationTime,
+    };
+  },
+});

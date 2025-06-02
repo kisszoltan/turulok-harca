@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Icon } from "@iconify/react";
 
 import { Profile } from "./profile";
+import { Counter } from "./counter";
 
 import { siteConfig } from "@/shared/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -49,10 +50,13 @@ export const Navbar = () => {
         </ul>
       </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
+      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full">
+        <NavbarItem className="hidden sm:flex gap-2">
+          <Counter />
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full">
         <NavbarItem className="hidden sm:flex gap-2">
           <Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
             <Icon className="text-default-500" icon="simple-icons:discord" />
