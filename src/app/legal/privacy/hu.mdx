@@ -1,16 +1,125 @@
 import { siteConfig } from "@/shared/site";
 import { capitalize } from "@/shared/utils";
 
-# Privacy Policy
+# Adatkezelési Tájékoztató
 
-## Last Updated: December 17, 2024
+**Hatályos: 2025.06.02.**
 
-At **{capitalize(siteConfig.name)}**, operated by **{siteConfig.company}**, we take your privacy seriously. This Privacy Policy outlines how we collect, use, and protect your personal data. By using our website and services, you agree to the collection and use of information in accordance with this policy.
-
----
-
-TBD
+Jelen Adatkezelési Tájékoztató célja, hogy átlátható módon ismertesse, hogyan gyűjtjük, használjuk, tároljuk és védjük a személyes adatokat, amikor Ön a {siteConfig.url} weboldalt ("Weboldal") használja, amelyet a {capitalize(siteConfig.name)} ("Szolgáltató", "mi", "minket", "miénk") üzemeltet.
 
 ---
 
-By using {capitalize(siteConfig.name)}, you acknowledge that you have read, understood, and agree to the terms of this Privacy Policy.
+## 1. Az adatkezelés jogalapja
+
+A személyes adatok kezelése az alábbi jogalapokon történik:
+
+- az érintett hozzájárulása [GDPR 6. cikk (1) a)],
+- szerződés teljesítése [GDPR 6. cikk (1) b)],
+- jogi kötelezettség teljesítése [GDPR 6. cikk (1) c)],
+- a Szolgáltató jogos érdeke [GDPR 6. cikk (1) f)] – például a Weboldal biztonságos működtetése és visszaélések megelőzése érdekében.
+
+---
+
+## 2. Kezelt adatok köre
+
+A Szolgáltató az alábbi adatokat kezelheti:
+
+- **Bejelentkezési és azonosítási adatok**: IP-cím, e-mail, felhasználónév, azonosító tokenek (Convex által kezelt),
+- **Technikai adatok**: böngésző típusa, operációs rendszer, látogatás ideje, hivatkozó oldal,
+- **Analitikai adatok**: felhasználói interakciók, viselkedési minták (Google Analytics, Microsoft Clarity),
+- **Fizetési adatok**: a tranzakcióhoz kapcsolódó információk (Stripe által kezelt – bankkártyaadatokat nem tárolunk),
+- **Beküldött szöveges kérdések tartalma**: moderálás és feldolgozás céljából kerülnek elemzésre (Google Gemini AI).
+
+---
+
+## 3. Harmadik fél szolgáltatók
+
+A Weboldal működése során az alábbi harmadik felek végezhetnek adatkezelést vagy adatfeldolgozást:
+
+### a) **Convex**
+
+Bejelentkezési és jogosultságkezelési adatokat tárol és kezel biztonságosan.  
+**Adatkezelőként** jár el.
+
+### b) **Stripe**
+
+A fizetések biztonságos lebonyolítását végzi. Bankkártyaadatokat kizárólag a Stripe kezeli.  
+**Önálló adatkezelőként** jár el.  
+Adatvédelmi szabályzat: [https://stripe.com/privacy](https://stripe.com/privacy)
+
+### c) **Google Analytics**
+
+Az oldalhasználati statisztikák gyűjtésére és elemzésére szolgál, anonimizált formában.  
+Adatvédelmi szabályzat: [https://policies.google.com/privacy](https://policies.google.com/privacy)
+
+### d) **Microsoft Clarity**
+
+A felhasználói viselkedés vizualizálására szolgál, például egérmozgások, görgetések alapján.  
+Adatvédelmi szabályzat: [https://privacy.microsoft.com](https://privacy.microsoft.com)
+
+### e) **Google Gemini AI**
+
+A felhasználók által beküldött kérdéseket elemzi automatikusan moderálási, vektorosítási és rendszerezési célból. A feldolgozás szöveges alapon történik, személyes adatokat nem tárol.  
+Adatvédelmi szabályzat: [https://policies.google.com/technologies/ai](https://policies.google.com/technologies/ai)
+
+---
+
+## 4. Adattárolás időtartama
+
+Az adatokat csak a cél megvalósulásához szükséges ideig tároljuk:
+
+- Bejelentkezési adatok: a fiók megszűnéséig,
+- Analitikai adatok: max. 26 hónap (Google Analytics beállítás szerint),
+- Beküldött kérdések: tartalmi feldolgozást követően anonimizálva archiválhatók,
+- Fizetési adatok: a jogszabályi kötelezettségek szerint (általában 8 évig).
+
+---
+
+## 5. Az Ön jogai
+
+Önt az alábbi jogok illetik meg:
+
+- **Hozzáféréshez való jog**: tájékoztatást kérhet az Önről kezelt adatokról.
+- **Helyesbítéshez való jog**: pontatlan adat helyesbítését kérheti.
+- **Törléshez való jog**: kérheti adatai törlését, ha azok kezelése jogellenes vagy a cél megszűnt.
+- **Adatkezelés korlátozásához való jog**.
+- **Adathordozhatósághoz való jog**.
+- **Tiltakozáshoz való jog**: jogos érdeken alapuló adatkezelés ellen tiltakozhat.
+
+Kérelmét az alábbi elérhetőségen nyújthatja be:  
+📧 **info@{siteConfig.url.replace("https://", "")}**
+
+---
+
+## 6. Adatbiztonság
+
+Minden tőlünk elvárható technikai és szervezési intézkedést megteszünk annak érdekében, hogy adatait biztonságban kezeljük. A hozzáférést korlátozzuk, az adatok titkosított csatornán kerülnek továbbításra, és rendszeresen felülvizsgáljuk biztonsági eljárásainkat.
+
+---
+
+## 7. Panasz benyújtása
+
+Ha úgy érzi, hogy az adatkezelés nem felel meg a jogszabályoknak, panasszal élhet az illetékes felügyeleti hatóságnál:
+
+**Nemzeti Adatvédelmi és Információszabadság Hatóság (NAIH)**  
+Cím: 1055 Budapest, Falk Miksa utca 9-11.  
+Web: [https://naih.hu](https://naih.hu)
+
+---
+
+## 8. Szabályzat módosítása
+
+Fenntartjuk a jogot jelen Adatkezelési Tájékoztató bármikori módosítására. Az esetleges változásokat ezen az oldalon tesszük közzé, a dokumentum tetején megjelölt hatályos dátummal.
+
+---
+
+## 9. Üzemeltető adatai
+
+A Weboldalt a Kiss-Hanzsa Produkciós Iroda Kft. (röviden: Kiss-Hanzsa Kft.) üzemelteti.  
+Székhely: 6772 Deszk, Tömörkény István utca 10.  
+Adószám: 24992141-2-05  
+Kapcsolattartás: [info@turulok-harca.hu](mailto:info@turulok-harca.hu)
+
+---
+
+A Weboldal használatával Ön kijelenti, hogy elolvasta, megértette és elfogadja jelen Adatkezelési Tájékoztató tartalmát.

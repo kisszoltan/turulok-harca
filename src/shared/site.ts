@@ -6,6 +6,7 @@ export const siteConfig = {
   name: "Turulok Harca",
   description: "Két világ. Egy kérdés.",
   company: "Kiss-Hanzsa Kft",
+  url: "https://turulok-harca.hu",
   navItems: [
     { href: "/", label: "Bevezető" },
     { href: "/ask", label: "Kérdezek" },
