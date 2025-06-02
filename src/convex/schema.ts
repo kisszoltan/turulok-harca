@@ -4,12 +4,20 @@ import { v } from "convex/values";
 
 import { sideTypeSchema } from "./_types";
 
+const questionEmbeddings = defineTable({
+  embedding: v.array(v.float64()),
+}).vectorIndex("by_embedding", {
+  vectorField: "embedding",
+  dimensions: 768,
+});
+
 const questions = defineTable({
   content: v.string(),
   content_norm: v.string(),
   votesWesteria: v.optional(v.number()),
   votesHungeros: v.optional(v.number()),
   owner: v.id("users"),
+  embeddingId: v.optional(v.id("questionEmbeddings")),
 })
   .index("search_westeria", ["votesWesteria"])
   .index("search_hungeros", ["votesHungeros"])
@@ -47,6 +55,7 @@ const sides = defineTable({
 
 const schema = defineSchema({
   ...authTables,
+  questionEmbeddings,
   questions,
   rejects,
   balances,

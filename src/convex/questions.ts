@@ -1,6 +1,6 @@
 import { OrderedQuery, paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
-import { generateObject } from "ai";
+import { embed, generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
 
@@ -15,7 +15,7 @@ import { DataModel } from "./_generated/dataModel";
 import { normalizeString } from "./_helpers";
 import { sideTypeSchema } from "./_types";
 import { _config } from "./core";
-import { internal } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 
 export const list = query({
   args: {
@@ -71,13 +71,51 @@ export const listForSide = query({
   },
 });
 
+export const getByEmbed = query({
+  args: { id: v.id("questionEmbeddings") },
+  handler: async (ctx, { id }) => {
+    return await ctx.db
+      .query("questions")
+      .filter((q) => q.eq(q.field("embeddingId"), id))
+      .first();
+  },
+});
+
 export const create = action({
   args: { content: v.string() },
   handler: async (ctx, { content }) => {
     const canAsk = await ctx.runQuery(internal.questions._canAsk, { content });
 
     if (canAsk) {
-      // TODO verify if similar question exists already
+      const { embedding } = await embed({
+        model: google.textEmbeddingModel("text-embedding-004"),
+        value: content,
+      });
+      const similar = await ctx.vectorSearch(
+        "questionEmbeddings",
+        "by_embedding",
+        {
+          vector: embedding,
+          limit: 1,
+        },
+      );
+
+      if (similar[0] && similar[0]._score > 0.66) {
+        const alreadyAsked = await ctx.runQuery(api.questions.getByEmbed, {
+          id: similar[0]._id,
+        });
+
+        await ctx.runMutation(internal.questions._reject, {
+          content,
+          reason: `Már feltettek kérdést hasonló tartalommal. (${(similar[0]._score * 100).toFixed(2)}%-os hasonlóság)`,
+          suggestion:
+            "Kérdezz olyat, ami nem hasonlít erre a kérdésre: " +
+            alreadyAsked!.content,
+        });
+        throw new ConvexError(
+          "A Kistanács tagjai fontos emberek. Nem szeretik az ismétlést.",
+        );
+      }
 
       const { object } = await generateObject({
         model: google("models/gemini-2.0-flash-lite"),
@@ -100,7 +138,10 @@ Megjelenhet ez a kérdés nyilvánosan? Válaszolj magyarul az alábbi struktúr
       });
 
       if (object.accepted) {
-        await ctx.runMutation(internal.questions._create, { content });
+        await ctx.runMutation(internal.questions._create, {
+          content,
+          embedding,
+        });
       } else {
         await ctx.runMutation(internal.questions._reject, {
           content,
@@ -152,14 +193,19 @@ export const _canAsk = internalQuery({
 });
 
 export const _create = internalMutation({
-  args: { content: v.string() },
-  handler: async (ctx, { content }) => {
+  args: { content: v.string(), embedding: v.array(v.float64()) },
+  handler: async (ctx, { content, embedding }) => {
     const userId = await expectUser(ctx);
+
+    const embeddingId = await ctx.db.insert("questionEmbeddings", {
+      embedding,
+    });
 
     await ctx.db.insert("questions", {
       content,
       content_norm: normalizeString(content),
       owner: userId,
+      embeddingId,
     });
   },
 });
