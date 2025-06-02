@@ -15,7 +15,7 @@ export const AskingCounter = () => {
   });
 
   useEffect(() => {
-    if (!userCounter?.lastQuestion) return;
+    if (!userCounter?.nextQuestion) return;
     const target = new Date(userCounter?.nextQuestion);
     const updateCountdown = () => {
       const result = timeRemaining(target, [

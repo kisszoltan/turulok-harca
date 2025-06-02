@@ -1,6 +1,5 @@
 import { OrderedQuery, paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
-import { addDays } from "date-fns";
 import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
@@ -11,7 +10,7 @@ import {
   internalQuery,
   query,
 } from "./_generated/server";
-import { expectUser } from "./_shared";
+import { expectUser, getAskCounters } from "./_shared";
 import { DataModel } from "./_generated/dataModel";
 import { normalizeString } from "./_helpers";
 import { sideTypeSchema } from "./_types";
@@ -140,13 +139,9 @@ export const _canAsk = internalQuery({
     if (!content || content.length > 200)
       throw new ConvexError("A kérdés hossza nem megfelelő");
 
-    const lastQuestion = await ctx.db
-      .query("questions")
-      .filter((q) => q.eq(q.field("owner"), userId))
-      .order("desc")
-      .first();
+    const askCounters = await getAskCounters(ctx, userId, Date.now());
 
-    if (lastQuestion && addDays(lastQuestion._creationTime, 7) > new Date()) {
+    if (askCounters && !askCounters.canAsk) {
       throw new ConvexError(
         "Legyen akármekkora befolyásod, a nép hangjának is vannak korlátai. Hetente csak egy kérdést küldhetsz be.",
       );
