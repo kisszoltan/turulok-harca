@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link } from "@heroui/link";
 import { cn } from "@heroui/theme";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 import { addToast } from "@heroui/react";
 import { ConvexError } from "convex/values";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ export default function AskPage() {
   const [sending, setSending] = useState(false);
   const [question, setQuestion] = useState("");
   const { MAX_QUESTION_LENGTH } = useQuery(api.core.config) ?? {};
-  const submitQuestion = useMutation(api.questions.create);
+  const submitQuestion = useAction(api.questions.create);
 
   const handleSubmit = () => {
     if (question.trim().length > 0) {

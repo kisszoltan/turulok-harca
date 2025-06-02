@@ -17,6 +17,13 @@ const questions = defineTable({
     searchField: "content_norm",
   });
 
+const rejects = defineTable({
+  content: v.string(),
+  owner: v.id("users"),
+  reason: v.string(),
+  suggestion: v.optional(v.string()),
+});
+
 const balances = defineTable({
   userId: v.id("users"),
   value: v.number(),
@@ -41,6 +48,7 @@ const sides = defineTable({
 const schema = defineSchema({
   ...authTables,
   questions,
+  rejects,
   balances,
   purchases,
   votes,

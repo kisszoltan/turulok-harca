@@ -21,7 +21,7 @@ export const ActionStep: FC<{
     >
       <h2 className={title({ size: "sm" })}>Mi lesz a koronázás után?</h2>
       <p className={cn(message({ isJustified: false }), "my-8")}>
-        Hungaria hamarosan újra egyesül amikor a két tartomány együttesen
+        Hungria hamarosan újra egyesül amikor a két tartomány együttesen
         nyílványítja ki akaratát, hogy melyik vezető legyen az ország
         uralkodója.
       </p>

@@ -9,6 +9,9 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ConvexAuthNextjsProvider } from "@convex-dev/auth/nextjs";
 import { ConvexReactClient } from "convex/react";
 import { ToastProvider } from "@heroui/toast";
+import Clarity from "@microsoft/clarity";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -26,6 +29,20 @@ const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
+
+  React.useEffect(() => {
+    const firebaseConfig = process.env.NEXT_PUBLIC_GOOGLE_FIREBASE;
+
+    if (!!firebaseConfig) {
+      getAnalytics(initializeApp(JSON.parse(firebaseConfig)));
+    }
+
+    const clarityId = process.env.NEXT_PUBLIC_MICROSOFT_CLARITY;
+
+    if (!!clarityId) {
+      Clarity.init(clarityId);
+    }
+  }, []);
 
   return (
     <ConvexAuthNextjsProvider client={convex}>
