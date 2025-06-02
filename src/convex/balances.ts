@@ -2,12 +2,14 @@ import { ConvexError, v } from "convex/values";
 import { addDays } from "date-fns";
 
 import { mutation, query } from "./_generated/server";
-import { expectUser } from "./_shared";
+import { assumeUser, expectUser } from "./_shared";
 import { sideTypeSchema } from "./_types";
 
 export const get = query({
   handler: async (ctx) => {
-    const userId = await expectUser(ctx);
+    const userId = await assumeUser(ctx);
+
+    if (!userId) return null;
 
     return await ctx.db
       .query("balances")
