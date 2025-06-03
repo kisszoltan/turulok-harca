@@ -155,7 +155,7 @@ export default function StatusPage() {
   );
 }
 
-export const CTA = () => {
+const CTA = () => {
   return (
     <div className="bg-gradient-to-r from-primary-700 to-secondary-600 text-default-50 py-4 px-6 rounded-xl shadow-lg max-w-xl mx-auto mt-24">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
