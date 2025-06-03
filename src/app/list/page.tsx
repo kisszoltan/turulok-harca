@@ -1,13 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Tab, Tabs } from "@heroui/react";
+import { Link, Tab, Tabs } from "@heroui/react";
 import { useQuery } from "convex/react";
 
 import { AllTab } from "./_components/all-tab";
 import { SideTab } from "./_components/side-tab";
 
-import { title } from "@/components/primitives";
+import { message, title } from "@/components/primitives";
 import { api } from "@/convex/_generated/api";
 import { format } from "@/shared/utils";
 import { VotingCounter } from "@/components/voting-counter";
@@ -28,6 +28,13 @@ export default function ListPage() {
         Melyik kérdés szerinted a legizgalmasabb?
       </h2>
       <VotingCounter />
+      <p className={message()}>
+        Nem találod azt a kérdést, ami szerinted a legfontosabb?{" "}
+        <Link className="text-lg md:text-xl" href="/ask">
+          Küldj be
+        </Link>{" "}
+        Te is egy kérdést, hiszen kérdezni befolyás nélkül is lehet.
+      </p>
 
       <Tabs aria-label="Rendezés">
         <Tab key="all" className="w-full" title="Minden">
