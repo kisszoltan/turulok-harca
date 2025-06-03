@@ -33,7 +33,7 @@ export const pay = action({
           },
         ],
         mode: "payment",
-        success_url: `${domain}?paymentId=${paymentId}`,
+        success_url: `${domain}/me?paymentId=${paymentId}`,
         cancel_url: `${domain}/buy`,
       });
 
@@ -48,7 +48,6 @@ export const pay = action({
   },
 });
 
-// convex/stripe.ts (continued)
 export const fulfill = internalAction({
   args: { signature: v.string(), payload: v.string() },
   handler: async (ctx, { signature, payload }) => {
@@ -66,9 +65,10 @@ export const fulfill = internalAction({
       );
 
       if (event.type === "checkout.session.completed") {
-        const stripeId = (event.data.object as { id: string }).id;
+        const stripeId = event.data.object.id;
+        const paid = Math.round((event.data.object.amount_total ?? 0) / 100);
 
-        await ctx.runMutation(internal.payments.fulfill, { stripeId });
+        await ctx.runMutation(internal.payments.fulfill, { stripeId, paid });
       }
 
       return { success: true };

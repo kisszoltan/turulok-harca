@@ -44,6 +44,7 @@ const payments = defineTable({
   amount: v.number(),
   stripeId: v.optional(v.string()),
   processed: v.optional(v.boolean()),
+  paid: v.optional(v.number()),
 }).index("stripeId", ["stripeId"]);
 
 const votes = defineTable({

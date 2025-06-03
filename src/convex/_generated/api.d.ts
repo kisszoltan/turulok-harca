@@ -24,6 +24,7 @@ import type * as payments from "../payments.js";
 import type * as questions from "../questions.js";
 import type * as stripe from "../stripe.js";
 import type * as users from "../users.js";
+import type * as votes from "../votes.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -45,6 +46,7 @@ declare const fullApi: ApiFromModules<{
   questions: typeof questions;
   stripe: typeof stripe;
   users: typeof users;
+  votes: typeof votes;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

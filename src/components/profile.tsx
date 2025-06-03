@@ -9,7 +9,7 @@ export const Profile = () => {
   const user = useQuery(api.users.get, {});
 
   return user ? (
-    <Link href="/auth/signout" size="sm" title="Kilépés">
+    <Link href="/me" size="sm" title="Profil">
       {user.email}
     </Link>
   ) : (

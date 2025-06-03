@@ -71,6 +71,54 @@ export const listForSide = query({
   },
 });
 
+export const listForUser = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, { paginationOpts }) => {
+    const userId = await expectUser(ctx);
+    const results = await ctx.db
+      .query("questions")
+      .filter((q) => q.eq(q.field("owner"), userId))
+      .order("desc")
+      .paginate(paginationOpts);
+
+    return results;
+    // return {
+    //   ...results,
+    //   page: await Promise.all(
+    //     results.page.map(async (q) => {
+    //       return q;
+    //     })
+    //   ),
+    // };
+  },
+});
+
+export const listRejectedForUser = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, { paginationOpts }) => {
+    const userId = await expectUser(ctx);
+    const results = await ctx.db
+      .query("rejects")
+      .filter((q) => q.eq(q.field("owner"), userId))
+      .order("desc")
+      .paginate(paginationOpts);
+
+    return results;
+    // return {
+    //   ...results,
+    //   page: await Promise.all(
+    //     results.page.map(async (q) => {
+    //       return q;
+    //     })
+    //   ),
+    // };
+  },
+});
+
 export const getByEmbed = query({
   args: { id: v.id("questionEmbeddings") },
   handler: async (ctx, { id }) => {

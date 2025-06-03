@@ -1,10 +1,37 @@
 // convex/payments.ts
 
 import { ConvexError, v } from "convex/values";
+import { paginationOptsValidator } from "convex/server";
 
-import { internalMutation } from "./_generated/server";
+import { internalMutation, query } from "./_generated/server";
 import { sideTypeSchema } from "./_types";
 import { internal } from "./_generated/api";
+import { expectUser } from "./_shared";
+
+export const listForUser = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, { paginationOpts }) => {
+    const userId = await expectUser(ctx);
+    const results = await ctx.db
+      .query("payments")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .order("desc")
+      .paginate(paginationOpts);
+
+    return results;
+    //return {
+    //  ...results,
+    //  page: await Promise.all(
+    //    results.page.map(async (p) => {
+    //
+    //      return p;
+    //    }),
+    //  ),
+    //};
+  },
+});
 
 export const create = internalMutation({
   args: {
@@ -43,8 +70,8 @@ export const markPending = internalMutation({
 });
 
 export const fulfill = internalMutation({
-  args: { stripeId: v.string() },
-  handler: async (ctx, { stripeId }) => {
+  args: { stripeId: v.string(), paid: v.number() },
+  handler: async (ctx, { stripeId, paid }) => {
     const {
       _id: paymentId,
       amount,
@@ -56,6 +83,6 @@ export const fulfill = internalMutation({
       .unique())!;
 
     await ctx.runMutation(internal.balances.increase, { amount, side, userId });
-    await ctx.db.patch(paymentId, { processed: true });
+    await ctx.db.patch(paymentId, { processed: true, paid });
   },
 });
