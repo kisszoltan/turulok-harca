@@ -19,6 +19,7 @@ import { capitalize, format } from "@/shared/utils";
 import { message, title } from "@/components/primitives";
 import { api } from "@/convex/_generated/api";
 import { sideTypeValue } from "@/convex/_types";
+import { Loading } from "@/components/loading";
 
 export default function StatusPage() {
   const status = useQuery(api.balances.getStatus);
@@ -90,66 +91,65 @@ export default function StatusPage() {
           </div>
         </div>
       </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        transition={{ duration: 1 }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-6">
-          {status &&
-            sideTypeValue.map((faction) => {
-              const avg = !status[faction]
-                ? 0
-                : (status[faction].balance / status[faction].members).toFixed(
-                    1,
-                  );
 
-              return (
-                <div key={faction}>
-                  <Card isFooterBlurred>
-                    <CardHeader>
-                      <h3 className={title({ size: "xs" })}>
-                        {capitalize(faction)} - {format(status[faction]?.votes)}
-                      </h3>
-                    </CardHeader>
-                    <CardBody>
-                      <Image src={sides[faction].portrait} />
-                    </CardBody>
-                    <CardFooter className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 text-center text-default-500 overflow-hidden absolute rounded-large bottom-6 w-[90%] left-1/2 transform -translate-x-1/2  shadow-small z-10">
-                      <div>
-                        <div className="text-3xl font-bold text-white">
-                          {format(status[faction]?.members)}{" "}
-                          <span className="text-sm font-thin">fő</span>
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          Támogató
-                        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-6">
+        {status === undefined ? (
+          <Loading />
+        ) : (
+          sideTypeValue.map((faction) => {
+            const avg = !status[faction]
+              ? 0
+              : (status[faction].balance / status[faction].members).toFixed(1);
+
+            return (
+              <div key={faction}>
+                <Card isFooterBlurred>
+                  <CardHeader className="flex flex-col gap-3">
+                    <h3 className={title({ size: "xs" })}>
+                      {capitalize(faction)} - {format(status[faction]?.votes)}
+                    </h3>
+                    <div className={message({ size: "xs" })}>
+                      {sides[faction].slogan}
+                    </div>
+                  </CardHeader>
+                  <CardBody>
+                    <Image src={sides[faction].portrait} />
+                  </CardBody>
+                  <CardFooter className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 text-center text-default-500 overflow-hidden absolute rounded-large bottom-6 w-[90%] left-1/2 transform -translate-x-1/2  shadow-small z-10">
+                    <div>
+                      <div className="text-3xl font-bold text-white">
+                        {format(status[faction]?.members)}{" "}
+                        <span className="text-sm font-thin">fő</span>
                       </div>
-                      <div>
-                        <div className="text-3xl font-bold text-white">
-                          {format(status[faction]?.balance)}{" "}
-                          <span className="text-sm font-thin">pont</span>
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          Max. befolyás / nap
-                        </div>
+                      <div className="text-sm text-muted-foreground">
+                        Támogató
                       </div>
-                      <div>
-                        <div className="text-3xl font-bold text-white">
-                          {avg} <span className="text-sm font-thin">pont</span>
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          Befolyás / fő
-                        </div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-white">
+                        {format(status[faction]?.balance)}{" "}
+                        <span className="text-sm font-thin">pont</span>
                       </div>
-                    </CardFooter>
-                  </Card>
-                </div>
-              );
-            })}
-        </div>
-      </motion.div>
+                      <div className="text-sm text-muted-foreground">
+                        Max. befolyás / nap
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-white">
+                        {avg} <span className="text-sm font-thin">pont</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Befolyás / fő
+                      </div>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </div>
+            );
+          })
+        )}
+      </div>
+
       <CTA />
     </section>
   );

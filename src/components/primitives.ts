@@ -57,6 +57,7 @@ export const message = tv({
   base: "text-default-500 ",
   variants: {
     size: {
+      xs: "text-xs md:text-sm",
       sm: "text-base md:text-lg",
       md: "text-lg md:text-xl",
       lg: "text-xl md:text-2xl",

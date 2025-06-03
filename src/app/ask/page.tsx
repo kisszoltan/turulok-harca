@@ -69,6 +69,7 @@ export default function AskPage() {
       <div className="mt-6">
         <Textarea
           className="w-full max-w-md mx-auto"
+          classNames={{ input: "text-xl" }}
           description={`${question?.trim().length ?? 0}/${MAX_QUESTION_LENGTH}`}
           minRows={5}
           placeholder="Írd ide a kérdésed..."
