@@ -4,6 +4,7 @@ import { addDays } from "date-fns";
 import { internalMutation, mutation, query } from "./_generated/server";
 import { assumeUser, expectUser } from "./_shared";
 import { SideType, sideTypeSchema } from "./_types";
+import { _config } from "./core";
 
 export const get = query({
   handler: async (ctx) => {
@@ -15,6 +16,56 @@ export const get = query({
       .query("balances")
       .filter((q) => q.eq(q.field("userId"), userId))
       .unique();
+  },
+});
+
+export const bannerMen = mutation({
+  args: { side: sideTypeSchema },
+  handler: async (ctx, { side }) => {
+    const { BANNER_PERIOD_OVER } = _config();
+
+    if (BANNER_PERIOD_OVER) {
+      throw new ConvexError("Már visszaérkeztek a hollók a zászlóhordozóktól.");
+    }
+
+    const userId = await expectUser(ctx);
+
+    const balance = await ctx.db
+      .query("balances")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .unique();
+
+    if (balance) {
+      throw new ConvexError("Csak új felhasználók lehetnek zászlóhordozók.");
+    }
+    await ctx.db.insert("balances", { userId, value: 1, side });
+
+    const sideRecord = await ctx.db
+      .query("sides")
+      .filter((q) => q.eq(q.field("side"), side))
+      .unique();
+
+    if (!sideRecord) {
+      await ctx.db.insert("sides", {
+        balance: 1,
+        side,
+        votes: 0,
+        members: 1,
+      });
+    } else {
+      await ctx.db.patch(sideRecord._id, {
+        balance: (sideRecord.balance ?? 0) + 1,
+        members: (sideRecord.members ?? 0) + 1,
+      });
+    }
+
+    await ctx.db.insert("payments", {
+      userId,
+      side,
+      amount: 1,
+      processed: true,
+      paid: 0,
+    });
   },
 });
 
@@ -51,9 +102,14 @@ export const increase = internalMutation({
         members: 1,
       });
     } else {
+      // increase member count only if user is a first-time buyer (aka did not have balance yet)
+      const members = balance
+        ? (sideRecord.members ?? 0)
+        : (sideRecord.members ?? 0) + 1;
+
       await ctx.db.patch(sideRecord._id, {
         balance: (sideRecord.balance ?? 0) + amount,
-        members: (sideRecord.members ?? 0) + 1,
+        members,
       });
     }
   },

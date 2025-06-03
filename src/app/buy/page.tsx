@@ -4,15 +4,17 @@ import { Button } from "@heroui/button";
 import { motion } from "framer-motion";
 import { Link } from "@heroui/link";
 import { cn } from "@heroui/theme";
-import { useEffect, useState } from "react";
-import { addToast, Alert, NumberInput } from "@heroui/react";
+import { FC, useEffect, useState } from "react";
+import { addToast, Alert, Card, CardBody, NumberInput } from "@heroui/react";
 import {
   Authenticated,
   Unauthenticated,
   useAction,
+  useMutation,
   useQuery,
 } from "convex/react";
 import { ConvexError } from "convex/values";
+import { useRouter } from "next/navigation";
 
 import { message, title } from "@/components/primitives";
 import { SideType } from "@/convex/_types";
@@ -117,7 +119,7 @@ export default function BuyPage() {
           title="Vigyázz!"
         />
 
-        <div className="mt-8 flex flex-col items-center gap-6">
+        <div className="my-8 flex flex-col items-center gap-6">
           <div className="flex items-center gap-4">
             <Button
               as={Link}
@@ -144,24 +146,73 @@ export default function BuyPage() {
                       description: "Sikertelen vásárlás: " + e.data,
                     }),
                   );
-
-                //increaseBalance({ side, amount })
-                //  .then(() => {
-                //    addToast({
-                //      title: "A hollód megérkezett",
-                //      description: "Sikeres vásárlás",
-                //      color: "success",
-                //    });
-                //    router.push("/list");
-                //  })
-                //  ;
               }}
             >
               Vásárlás
             </Button>
           </div>
         </div>
+        <BannerMen side={side} />
       </Authenticated>
     </motion.div>
   );
 }
+
+const BannerMen: FC<{ side?: SideType }> = ({ side }) => {
+  const router = useRouter();
+  const balance = useQuery(api.balances.get);
+  const bannerMen = useMutation(api.balances.bannerMen);
+  const { BANNER_PERIOD_OVER } = useQuery(api.core.config) ?? {};
+
+  if (!!BANNER_PERIOD_OVER || balance) return null;
+
+  return (
+    <Card>
+      <CardBody className="flex flex-col items-center gap-2">
+        <p className={message({ size: "sm" })}>
+          Az uralkodójelöltek mozgósították a zászlóhordozóikat, de amíg a
+          hollók nem térnek vissza senki sem tudhatja biztosan ki válaszol. A
+          tanácsadók most mindkét oldalon kétségbeesettek. Ha ügyesen
+          helyezkedsz, még az is lehet, hogy a Kistanácsból adósoddá tehetsz
+          valakit.
+        </p>
+        <Button
+          className="w-fit"
+          color="primary"
+          isDisabled={!side}
+          size="lg"
+          variant="solid"
+          onPress={async () => {
+            if (!side) return;
+
+            bannerMen({ side })
+              .then(() => {
+                addToast({
+                  title: "A hollód megérkezett",
+                  description: "Sikeres megszereztél 1 Kistanácsi Befolyást",
+                  color: "success",
+                });
+                router.push("/list");
+              })
+              .catch((e: ConvexError<string>) =>
+                addToast({
+                  color: "danger",
+                  title: "A hollód visszafordult",
+                  description: e.data,
+                }),
+              );
+          }}
+        >
+          Kérem az 1 Kistanácsi Befolyásomat
+        </Button>
+        <p className={cn(message({ size: "xs" }), "text-default-400")}>
+          Az az ajánlat korlátozott ideig érvényes, így a Kistanácsi Befolyás
+          ingyenes megszerzése is véges. Ezen időszak alatt is csak olyan
+          felhasználók kaphatnak ingyenes befolyást, akik még nem rendelkeznek
+          Kistanácsi Befolyással (egyik oldal felé sem). Az így megszerezhető
+          Kistanácsi Befolyás mennyisége pontosan 1 lehet.
+        </p>
+      </CardBody>
+    </Card>
+  );
+};

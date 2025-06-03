@@ -3,12 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { Button, Link } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { useQuery } from "convex/react";
 
 import { message } from "./primitives";
+
+import { api } from "@/convex/_generated/api";
 
 const STORAGE_KEY = "hideBanner";
 
 export const Banner = () => {
+  const { BANNER_PERIOD_OVER } = useQuery(api.core.config) ?? {};
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -17,7 +21,7 @@ export const Banner = () => {
     setVisible(isHidden !== "true");
   }, []);
 
-  if (!visible) return null;
+  if (!visible || !!BANNER_PERIOD_OVER) return null;
 
   return (
     <div className="flex w-full items-center gap-x-3 border-b-1 border-divider bg-background/[0.15] px-6 py-2 backdrop-blur-xl sm:px-3.5 sm:before:flex-1">
