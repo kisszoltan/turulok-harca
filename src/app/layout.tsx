@@ -7,6 +7,7 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/shared/site";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { Banner } from "@/components/banner";
 
 export const metadata: Metadata = {
   title: {
@@ -38,6 +39,7 @@ export default function RootLayout({
         <body className="min-h-screen font-serif antialiased">
           <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
             <div className="relative flex flex-col h-screen">
+              <Banner />
               <Navbar />
               <main className="mx-auto max-w-7xl pt-16 px-6 flex-grow w-full">
                 {children}
