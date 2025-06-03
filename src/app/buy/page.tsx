@@ -18,19 +18,25 @@ import { useRouter } from "next/navigation";
 
 import { message, title } from "@/components/primitives";
 import { SideType } from "@/convex/_types";
-import { capitalize } from "@/shared/utils";
+import { capitalize, format } from "@/shared/utils";
 import { SideButton } from "@/components/side-button";
 import { api } from "@/convex/_generated/api";
 
 export default function BuyPage() {
+  const { BASE_PRICE } = useQuery(api.core.config) ?? {};
   const currentBalance = useQuery(api.balances.get);
   const [side, setSide] = useState<SideType | undefined>(currentBalance?.side);
   const [amount, setAmount] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(BASE_PRICE);
   const pay = useAction(api.stripe.pay);
 
   useEffect(() => {
     setSide(currentBalance?.side);
   }, [currentBalance]);
+
+  useEffect(() => {
+    setTotalPrice((BASE_PRICE ?? 0) * amount);
+  }, [BASE_PRICE, amount]);
 
   return (
     <motion.div
@@ -97,6 +103,7 @@ export default function BuyPage() {
         </div>
         <NumberInput
           className="my-6"
+          classNames={{ input: "text-xl", label: "text-lg" }}
           description={
             side &&
             `Jelenleg ${currentBalance?.value ? `${currentBalance?.value} Kistanácsi Befolyásod van` : "nincs Kistanácsi Befolyásod"}. Vásárlásoddal ${(currentBalance?.value ?? 0) + amount} befolyásod lesz a ${capitalize(side)} Kistanácsában.`
@@ -148,7 +155,7 @@ export default function BuyPage() {
                   );
               }}
             >
-              Vásárlás
+              Vásárlás ({format(totalPrice)} Ft)
             </Button>
           </div>
         </div>
