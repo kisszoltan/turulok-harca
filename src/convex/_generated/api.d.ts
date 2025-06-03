@@ -20,7 +20,9 @@ import type * as auth from "../auth.js";
 import type * as balances from "../balances.js";
 import type * as core from "../core.js";
 import type * as http from "../http.js";
+import type * as payments from "../payments.js";
 import type * as questions from "../questions.js";
+import type * as stripe from "../stripe.js";
 import type * as users from "../users.js";
 
 /**
@@ -39,7 +41,9 @@ declare const fullApi: ApiFromModules<{
   balances: typeof balances;
   core: typeof core;
   http: typeof http;
+  payments: typeof payments;
   questions: typeof questions;
+  stripe: typeof stripe;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

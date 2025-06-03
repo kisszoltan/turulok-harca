@@ -38,10 +38,13 @@ const balances = defineTable({
   side: sideTypeSchema,
 });
 
-const purchases = defineTable({
+const payments = defineTable({
   userId: v.id("users"),
+  side: sideTypeSchema,
   amount: v.number(),
-});
+  stripeId: v.optional(v.string()),
+  processed: v.optional(v.boolean()),
+}).index("stripeId", ["stripeId"]);
 
 const votes = defineTable({
   userId: v.id("users"),
@@ -61,7 +64,7 @@ const schema = defineSchema({
   questions,
   rejects,
   balances,
-  purchases,
+  payments,
   votes,
   sides,
 });

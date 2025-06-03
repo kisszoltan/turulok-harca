@@ -9,11 +9,10 @@ import { addToast, Alert, NumberInput } from "@heroui/react";
 import {
   Authenticated,
   Unauthenticated,
-  useMutation,
+  useAction,
   useQuery,
 } from "convex/react";
 import { ConvexError } from "convex/values";
-import { useRouter } from "next/navigation";
 
 import { message, title } from "@/components/primitives";
 import { SideType } from "@/convex/_types";
@@ -22,11 +21,10 @@ import { SideButton } from "@/components/side-button";
 import { api } from "@/convex/_generated/api";
 
 export default function BuyPage() {
-  const router = useRouter();
-  const increaseBalance = useMutation(api.balances.increase);
   const currentBalance = useQuery(api.balances.get);
   const [side, setSide] = useState<SideType | undefined>(currentBalance?.side);
   const [amount, setAmount] = useState(1);
+  const pay = useAction(api.stripe.pay);
 
   useEffect(() => {
     setSide(currentBalance?.side);
@@ -134,24 +132,29 @@ export default function BuyPage() {
               isDisabled={!side}
               size="lg"
               variant="solid"
-              onPress={() => {
-                side &&
-                  increaseBalance({ side, amount })
-                    .then(() => {
-                      addToast({
-                        title: "A hollód megérkezett",
-                        description: "Sikeres vásárlás",
-                        color: "success",
-                      });
-                      router.push("/list");
-                    })
-                    .catch((e: ConvexError<string>) =>
-                      addToast({
-                        color: "danger",
-                        title: "A hollód visszafordult",
-                        description: "Sikertelen vásárlás: " + e.data,
-                      }),
-                    );
+              onPress={async () => {
+                if (!side) return;
+
+                pay({ amount, side })
+                  .then((paymentUrl) => (window.location.href = paymentUrl!))
+                  .catch((e: ConvexError<string>) =>
+                    addToast({
+                      color: "danger",
+                      title: "A hollód visszafordult",
+                      description: "Sikertelen vásárlás: " + e.data,
+                    }),
+                  );
+
+                //increaseBalance({ side, amount })
+                //  .then(() => {
+                //    addToast({
+                //      title: "A hollód megérkezett",
+                //      description: "Sikeres vásárlás",
+                //      color: "success",
+                //    });
+                //    router.push("/list");
+                //  })
+                //  ;
               }}
             >
               Vásárlás

@@ -1,7 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { addDays } from "date-fns";
 
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { assumeUser, expectUser } from "./_shared";
 import { SideType, sideTypeSchema } from "./_types";
 
@@ -18,11 +18,9 @@ export const get = query({
   },
 });
 
-export const increase = mutation({
-  args: { amount: v.number(), side: sideTypeSchema },
-  handler: async (ctx, { amount, side }) => {
-    const userId = await expectUser(ctx);
-
+export const increase = internalMutation({
+  args: { userId: v.id("users"), amount: v.number(), side: sideTypeSchema },
+  handler: async (ctx, { userId, amount, side }) => {
     if (amount <= 0) throw new ConvexError("Érvénytelen mennyiség");
 
     const balance = await ctx.db
